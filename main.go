@@ -7,6 +7,7 @@ import (
 	dimensionsRepo "github.com/Gealber/re-partners-challenge/repositories/dimensions"
 	ordersService "github.com/Gealber/re-partners-challenge/services/orders"
 	badger "github.com/dgraph-io/badger/v4"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,11 +39,14 @@ func main() {
 	ctr := ordersController.New(repo, srv)
 
 	r := gin.Default()
+	// CORS middleware with an insecure way to set it up
+	r.Use(cors.Default())
+
 	api := r.Group("/api")
 	{
-		api.GET("/pack", ctr.GetPack)
-		api.POST("/dimensions", ctr.PostDimensions)
-		api.GET("/dimensions", ctr.GetDimensions)
+		api.GET("/orders/pack", ctr.GetOrderPacking)
+		api.PUT("/orders/dimensions", ctr.PutOrdersDimensions)
+		api.GET("/orders/dimensions", ctr.GetOrdersDimensions)
 	}
 
 	r.Run()

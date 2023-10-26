@@ -26,7 +26,7 @@ func New(repo dimensionsRepository, orderSrv orderService) *orderController {
 	return &orderController{dimensionsRepo: repo, orderSrv: orderSrv}
 }
 
-func (ctr *orderController) GetPack(c *gin.Context) {
+func (ctr *orderController) GetOrderPacking(c *gin.Context) {
 	// number of items
 	nStr := c.Query("items")
 
@@ -57,7 +57,7 @@ func (ctr *orderController) GetPack(c *gin.Context) {
 	})
 }
 
-func (ctr *orderController) PostDimensions(c *gin.Context) {
+func (ctr *orderController) PutOrdersDimensions(c *gin.Context) {
 	var body CreateDimensionsRequest
 	if err := c.BindJSON(&body); err != nil {
 		c.JSON(400, gin.H{"message": "bad request"})
@@ -70,7 +70,7 @@ func (ctr *orderController) PostDimensions(c *gin.Context) {
 	}
 }
 
-func (ctr *orderController) GetDimensions(c *gin.Context) {
+func (ctr *orderController) GetOrdersDimensions(c *gin.Context) {
 	// retrieve current dimensions
 	dimensions, err := ctr.dimensionsRepo.Get()
 	if err != nil {

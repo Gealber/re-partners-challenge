@@ -1,0 +1,113 @@
+openapi: 3.1.0
+info:
+  title: Re-Partners Challenge
+  description: |-
+    API documentation for re-partner challenge.
+    Some useful links:
+      - [API source code](https://github.com/Gealber/re-partners-challenge)
+
+  contact:
+    email: gealbermorales@gmail.com
+  version: 1.0.0
+servers:
+  - url: https://re-partners-4xyumssqqq-uc.a.run.app/api
+tags:
+  - name: order
+    description: Orders made to the server
+paths:
+  /orders/dimensions:
+    get:
+      tags:
+        - order
+      summary: Retrieve the current dimensions
+      description: Doesn't requires a query parameter
+      operationId: getOrdersDimensions
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    dimensions:
+                      type: array
+                      items:
+                        type: integer
+                        examples: [5000, 2000, 1000, 500, 250]
+        '400':
+          description: Invalid items value
+    put:
+      tags:
+        - order
+      summary: Replace dimensions
+      description: Replace the existing dimensions
+      operationId: putOrdersDimensions
+      requestBody:
+        description: Update orders dimensions
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  dimensions:
+                    type: array
+                    items:
+                      type: integer
+                    examples: [5000, 2000, 1000, 500, 250]
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
+  /orders/pack:
+    get:
+      tags:
+        - order
+      summary: Computes the packing distribution for a given order
+      description: Requires one query parameter specifying the items in the order
+      operationId: getOrdersPack
+      parameters:
+        - name: items
+          in: query
+          description: Number of items in the order
+          required: true
+          schema:
+            type: integer
+            default: 250
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Packing'
+        '400':
+          description: Invalid items value
+components:
+  schemas:
+    Packing:
+      type: object
+      properties:
+        packs:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              code:
+                type: integer
+              text:
+                type: integer
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
